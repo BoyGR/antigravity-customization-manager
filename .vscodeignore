@@ -1,0 +1,47 @@
+# Development sources
+src/**
+scripts/**
+tsconfig.json
+esbuild.js
+out/**
+media/customization-manager.js
+media/customization-manager.css
+
+# Development configuration
+.vscode/**
+.git/**
+.gitignore
+
+# Dependencies are development-only for this extension.
+# Runtime output uses Node/VS Code built-ins.
+node_modules/**
+
+# TypeScript/source-map development artifacts
+dist/**/*.map
+out/**/*.map
+**/*.tsbuildinfo
+
+# Local package/release artifacts
+*.tgz
+*.vsix
+release/**
+coverage/**
+.nyc_output/**
+
+# Logs / temporary files
+*.log
+*.tmp
+*.bak
+*.backup
+
+# Environment / secrets - defensive exclusions
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Internal private workspace - strictly excluded from packaging
+.bgr/**
+internal/**
+internal-docs/**
+PUBLISHING.md

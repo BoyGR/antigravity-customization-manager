@@ -1,0 +1,19 @@
+node_modules/
+.runtime/
+.diagnostics/
+diagnostics/
+.vscode/
+release/
+*.vsix
+*.tgz
+*.log
+.env
+.env.*
+
+dist/
+out/
+
+# Internal private workspace (docs, operational artifacts, private notes)
+.bgr/
+internal/
+

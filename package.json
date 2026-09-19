@@ -1,0 +1,225 @@
+{
+    "name": "antigravity-customization-manager",
+    "displayName": "Antigravity Customization Manager",
+    "description": "Master your Google Antigravity & AI Agent rules, skills, and token budgets across global and workspace scopes.",
+    "version": "0.1.0",
+    "publisher": "boygr",
+    "author": {
+        "name": "Boy Gilang Ramadhan",
+        "url": "https://boygr.com"
+    },
+    "license": "MIT",
+    "icon": "media/icon.png",
+    "homepage": "https://boygr.com",
+    "bugs": {
+        "url": "https://github.com/BoyGR/antigravity-customization-manager/issues"
+    },
+    "galleryBanner": {
+        "color": "#090d16",
+        "theme": "dark"
+    },
+    "engines": {
+        "vscode": "^1.95.0"
+    },
+    "categories": [
+        "Other",
+        "Machine Learning",
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "icons": {
+            "antigravity-custom-logo": {
+                "description": "Antigravity Customization Manager Logo",
+                "default": {
+                    "fontPath": "media/antigravity.woff",
+                    "fontCharacter": "\\f101"
+                }
+            },
+            "antigravity-logo": {
+                "description": "Antigravity Customization Manager Logo",
+                "default": {
+                    "fontPath": "media/antigravity.woff",
+                    "fontCharacter": "\\f101"
+                }
+            }
+        },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "antigravityCustomizationManager",
+                    "title": "Antigravity Customization Manager",
+                    "icon": "media/antigravity.svg"
+                }
+            ]
+        },
+        "views": {
+            "antigravityCustomizationManager": [
+                {
+                    "type": "webview",
+                    "id": "boygr.antigravityCustomizationManager.mainView",
+                    "name": "Customizations & Governance",
+                    "icon": "media/antigravity.svg"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "boygr.antigravityCustomizationManager.focusView",
+                "title": "Focus Customization Manager View",
+                "category": "Antigravity Customization Manager"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.refresh",
+                "title": "Refresh Rules & Skills",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(refresh)"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.createRule",
+                "title": "Create New Rule...",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(plus)"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.createSkill",
+                "title": "Create New Skill...",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(add)"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.exportMultiAgentRules",
+                "title": "Sync / Export Rules to Multi-Agent (Cursor, Claude, Copilot)...",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(sync)"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.openGlobalRulesFolder",
+                "title": "Open Global Rules Folder (~/.gemini/config/rules)",
+                "category": "Antigravity Customization Manager"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.openWorkspaceRulesFolder",
+                "title": "Open Workspace Rules Folder (.agents/rules)",
+                "category": "Antigravity Customization Manager"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.openSettings",
+                "title": "Settings",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(gear)"
+            }
+        ],
+        "menus": {
+            "view/title": [
+                {
+                    "command": "boygr.antigravityCustomizationManager.refresh",
+                    "when": "view == boygr.antigravityCustomizationManager.mainView",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "boygr.antigravityCustomizationManager.openSettings",
+                    "when": "view == boygr.antigravityCustomizationManager.mainView",
+                    "group": "navigation@2"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Antigravity Customization Manager",
+            "properties": {
+                "boygr.antigravityCustomizationManager.customAntigravityPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Custom path to Antigravity directory (~/.gemini). Leave blank for auto-detection."
+                },
+                "boygr.antigravityCustomizationManager.defaultRulesBudget": {
+                    "type": "integer",
+                    "default": 20000,
+                    "description": "Aggregate token budget for always-on rules (Antigravity default: 20000 tokens)."
+                },
+                "boygr.antigravityCustomizationManager.ruleFileSizeLimitBytes": {
+                    "type": "integer",
+                    "default": 24000,
+                    "description": "Per-rule file size limit in bytes before Antigravity truncates lines (Antigravity default: 24000 bytes)."
+                },
+                "boygr.antigravityCustomizationManager.showStatusBarItem": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show Antigravity rules and skills summary indicator in the status bar."
+                },
+                "boygr.antigravityCustomizationManager.theme": {
+                    "type": "string",
+                    "default": "vscode",
+                    "enum": [
+                        "vscode",
+                        "dark",
+                        "light",
+                        "system"
+                    ],
+                    "enumDescriptions": [
+                        "Follow VS Code active theme (Default)",
+                        "Force Dark Theme",
+                        "Force Light Theme",
+                        "Follow OS System theme"
+                    ],
+                    "description": "Theme appearance for Antigravity Customization Manager UI."
+                },
+                "boygr.antigravityCustomizationManager.defaultLanguage": {
+                    "type": "string",
+                    "default": "auto",
+                    "enum": [
+                        "auto",
+                        "en",
+                        "id"
+                    ],
+                    "enumDescriptions": [
+                        "Auto-detect from VS Code locale",
+                        "English",
+                        "Bahasa Indonesia"
+                    ],
+                    "description": "Preferred language for Antigravity Customization Manager UI."
+                },
+                "boygr.antigravityCustomizationManager.enableMultiAgentSync": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable cross-agent rule export (syncing to CLAUDE.md, .cursorrules, and .github/copilot-instructions.md)."
+                }
+            }
+        }
+    },
+    "scripts": {
+        "compile": "tsc -p ./ --noEmit && node esbuild.js --production",
+        "watch": "node esbuild.js --watch",
+        "package": "vsce package",
+        "vscode:prepublish": "npm run compile",
+        "package:vsix": "npx --yes @vscode/vsce package --out .bgr/releases",
+        "publish:marketplace": "npx --yes @vscode/vsce publish",
+        "publish:openvsx": "npx --yes ovsx publish"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "@types/vscode": "^1.95.0",
+        "@vscode/vsce": "^3.6.0",
+        "esbuild": "^0.25.0",
+        "typescript": "^5.8.0"
+    },
+    "keywords": [
+        "antigravity",
+        "rules",
+        "skills",
+        "ai-agent",
+        "gemini",
+        "customization",
+        "cursorrules",
+        "agents-md",
+        "vscode"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BoyGR/antigravity-customization-manager.git"
+    }
+}
+
