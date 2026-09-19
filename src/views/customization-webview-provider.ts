@@ -166,11 +166,18 @@ export class CustomizationWebviewProvider implements vscode.WebviewViewProvider 
                 break;
 
             case "revealInOS":
-                if (message.filePath && fs.existsSync(message.filePath)) {
-                    await vscode.commands.executeCommand(
-                        "revealFileInOS",
-                        vscode.Uri.file(message.filePath)
-                    );
+                if (message.filePath) {
+                    try {
+                        if (!fs.existsSync(message.filePath)) {
+                            fs.mkdirSync(message.filePath, { recursive: true });
+                        }
+                        await vscode.commands.executeCommand(
+                            "revealFileInOS",
+                            vscode.Uri.file(message.filePath)
+                        );
+                    } catch (err: any) {
+                        vscode.window.showErrorMessage(`Failed to open folder: ${err.message}`);
+                    }
                 }
                 break;
 

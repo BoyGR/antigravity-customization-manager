@@ -94,6 +94,7 @@
             noRulesMatch: "No rules matching your filter.",
             noSkillsMatch: "No skills matching your filter.",
             ruleToggled: "Rule status updated.",
+            noFolderAvailable: "No skills folder path is currently available.",
         },
         id: {
             appName: "Antigravity Customization",
@@ -187,6 +188,7 @@
             noRulesMatch: "Tidak ada aturan yang cocok dengan filter Anda.",
             noSkillsMatch: "Tidak ada keahlian yang cocok dengan filter Anda.",
             ruleToggled: "Status aturan diperbarui.",
+            noFolderAvailable: "Jalur folder keahlian tidak tersedia saat ini.",
         },
     };
 
@@ -657,16 +659,24 @@
 
     if (btnOpenSkillsFolder) {
         btnOpenSkillsFolder.addEventListener("click", () => {
-            if (state.paths && state.paths.workspaceSkillsDir) {
-                vscode.postMessage({
-                    type: "revealInOS",
-                    filePath: state.paths.workspaceSkillsDir,
-                });
+            let targetPath = null;
+            if (state.skillsScope === "builtin" && state.paths && state.paths.builtinSkillsDir) {
+                targetPath = state.paths.builtinSkillsDir;
+            } else if (state.skillsScope === "plugin" && state.paths && state.paths.globalPluginsDir) {
+                targetPath = state.paths.globalPluginsDir;
+            } else if (state.paths && state.paths.workspaceSkillsDir) {
+                targetPath = state.paths.workspaceSkillsDir;
             } else if (state.paths && state.paths.builtinSkillsDir) {
+                targetPath = state.paths.builtinSkillsDir;
+            }
+
+            if (targetPath) {
                 vscode.postMessage({
                     type: "revealInOS",
-                    filePath: state.paths.builtinSkillsDir,
+                    filePath: targetPath,
                 });
+            } else {
+                showToast(t("noFolderAvailable"), "warning");
             }
         });
     }

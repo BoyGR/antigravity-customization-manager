@@ -5,6 +5,18 @@ All notable changes to the **Antigravity Customization Manager** extension will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-09-20
+
+### Fixed
+- **Skills Folder Opener**: Resolved issue where clicking "Open Folder" in the Skills tab did not trigger if the workspace skills folder (`.agents/skills`) had not yet been created. The folder is now created automatically before opening in File Explorer / OS file manager.
+
+### Added
+- **Scope-Aware Folder Opening**: The "Open Folder" button now intelligently opens the corresponding folder depending on the active filter scope:
+  - **Workspace / All Scope**: Opens `.agents/skills/` in the active workspace.
+  - **Built-in Scope**: Opens the native Antigravity builtin skills directory.
+  - **Plugins Scope**: Opens the global plugins directory.
+- **Enhanced Toast Feedback**: Added graceful notification if no valid skills path is found for the chosen scope (`noFolderAvailable` in EN and ID).
+
 ## [0.1.0] - 2026-09-19
 
 ### Added
