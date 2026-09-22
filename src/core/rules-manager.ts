@@ -12,71 +12,58 @@ export interface RuleTemplate {
 
 export const RULE_TEMPLATES: RuleTemplate[] = [
     {
-        id: "developer-sop",
-        name: "Developer SOP & Strict Release Gates",
-        description: "Enforces strict approval before commit/push/release, SemVer rules, and transparent review.",
-        content: `# Developer SOP & Release Gates Protocol
+        id: "coding-standards",
+        name: "Coding Standards & Best Practices",
+        description: "Standards for clean code, type safety, modular architecture, and error handling.",
+        content: `# Coding Standards & Best Practices
 
-## 1. Developer Identity & Transparency
-- **Role**: AI Pair Programmer. Always explain technical rationale clearly before making changes.
-- **Tone**: Professional, precise, constructive, and free of AI fluff.
+## 1. Code Quality & Formatting
+- Write clean, readable, and maintainable code adhering to established project styling.
+- Use explicit and descriptive naming for variables, functions, and classes.
+- Keep functions small and focused on a single responsibility (SRP).
 
-## 2. Strict Approval Gates (Zero Automatic Actions)
-- **Prohibited Actions**: NEVER perform git commit, git push, git tag, version bump, or package publishing without explicit user approval.
-- **Review Requirement**: Always test locally first, present a clear summary of changes, and request confirmation before proceeding to release.
+## 2. Robustness & Error Handling
+- Always validate external input and API responses before processing.
+- Handle potential exceptions gracefully with informative error messages.
+- Avoid swallowing errors silently or using empty catch blocks.
 
-## 3. Versioning & SemVer
-- Adhere strictly to Semantic Versioning (PATCH for fixes, MINOR for features, MAJOR for breaking changes).
-- Maintain comprehensive changelog entries in CHANGELOG.md.
+## 3. Testing & Verification
+- Write tests for core business logic, edge cases, and bug fixes.
+- Ensure all existing unit and integration tests pass before completing tasks.
 `,
     },
     {
-        id: "git-protection",
-        name: "Git Index & Repository Protection",
-        description: "Zero direct access to .git/ internals, preserves git index stability on Windows.",
-        content: `# Git Index & Repository Protection Rule
+        id: "security-guardrails",
+        name: "Security & Secrets Protection",
+        description: "Prevents leaking API keys, enforces secure configuration, and safe data handling.",
+        content: `# Security & Secrets Protection
 
-## Strict Policy: Zero Direct Access to .git/
-You must NEVER directly read, write, modify, or delete any file or directory inside the \`.git/\` folder.
+## 1. Secrets & Credentials Safety
+- NEVER commit or hardcode API keys, tokens, passwords, or private certificates in source files.
+- Load all sensitive configurations from environment variables or secret stores.
+- Verify that configuration files containing credentials (e.g. \`.env\`) are ignored in \`.gitignore\`.
 
-### Allowed Git Operations
-- Only interact with the Git repository through standard Git CLI commands (\`git status\`, \`git diff\`, \`git add\`, \`git commit\`, \`git log\`).
-- Maintain Git index stability on Windows: preserve \`core.fscache = false\` and \`core.preloadindex = false\`.
-- Ensure no background processes hold locks on \`.git/index\` during operations.
+## 2. Input Validation & Data Sanitization
+- Treat all external input as untrusted and validate against expected schemas.
+- Use parameterized queries or ORM mechanisms to prevent injection vulnerabilities.
+- Follow the principle of least privilege when requesting system or network permissions.
 `,
     },
     {
-        id: "clean-architecture",
-        name: "Clean Architecture & Folder Separation",
-        description: "Keeps public repository clean, isolates internal docs, and enforces separation of concerns.",
-        content: `# Architecture & Project Boundaries
+        id: "documentation-standards",
+        name: "Documentation & API Guidelines",
+        description: "Guidelines for writing clear docstrings, README updates, and changelog tracking.",
+        content: `# Documentation & API Guidelines
 
-## 1. Clean Public Repository
-- Keep the repository root uncluttered and professional.
-- Internal documentation, runbooks, and developer-only context must reside in an isolated \`.bgr/\` folder.
-- The \`.bgr/\` directory must always be listed in \`.gitignore\` and never committed to public VCS.
+## 1. Inline & Code Documentation
+- Document public APIs, interfaces, and complex algorithms with clear docstrings.
+- State parameters, return types, and possible exceptions explicitly.
+- Explain the technical rationale ("why") behind non-obvious architecture decisions.
 
-## 2. Separation of Concerns
-- Business logic and core services must remain independent of UI and view layers.
-- Avoid tight coupling between modules; write self-contained, testable units.
-- Do not commit local environment files, secret tokens, or generated build caches.
-`,
-    },
-    {
-        id: "antislop",
-        name: "Anti-AI Slop & Tone Guidelines",
-        description: "Eliminates generic boilerplate, robotic conversational filler, and over-verbose commentary.",
-        content: `# Anti-AI Slop Guidelines
-
-## Direct & Concise Communication
-- Speak directly, technically, and concisely.
-- Do not use generic conversational filler (e.g., "Certainly!", "I would be happy to help with that!", "As an AI language model...").
-- When asked a technical question, deliver the solution or code immediately.
-
-## Code Quality Standards
-- No speculative, bloated boilerplate or unnecessary abstractions.
-- Keep comments meaningful and focused on 'why', not obvious 'what'.
-- Respect existing project patterns, styling conventions, and formatting.
+## 2. Project Documentation & Maintenance
+- Keep the project \`README.md\` accurate when introducing new features, commands, or requirements.
+- Document any breaking changes and migration paths clearly.
+- Provide clear setup, build, and contribution instructions for collaborators.
 `,
     },
 ];

@@ -5,6 +5,11 @@ All notable changes to the **Antigravity Customization Manager** extension will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-09-22
+
+### Changed
+- **Universal Rule Templates**: Replaced initial rule starter templates with 3 completely generic, industry-standard software engineering templates (*Coding Standards & Best Practices*, *Security & Secrets Protection*, and *Documentation & API Guidelines*).
+
 ## [0.1.2] - 2026-09-22
 
 ### Added
