@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 import * as vscode from "vscode";
 import { RULE_TEMPLATES, RulesManager } from "../core/rules-manager";
 import { SystemPaths } from "../core/types";
@@ -183,6 +184,60 @@ export function registerRuleCommands(
                     fs.mkdirSync(paths.workspaceRulesDir, { recursive: true });
                 }
                 await vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(paths.workspaceRulesDir));
+            }
+        )
+    );
+
+    // 5. Rename Rule Command
+    context.subscriptions.push(
+        vscode.commands.registerCommand(
+            "boygr.antigravityCustomizationManager.renameRule",
+            async (rulePath?: string) => {
+                let targetRulePath = rulePath;
+
+                if (!targetRulePath) {
+                    const rules = await rulesManager.loadAllRules();
+                    const renameableRules = rules.filter((r) => r.scope !== "workspace-root");
+                    if (renameableRules.length === 0) {
+                        vscode.window.showInformationMessage("No renameable rule files found.");
+                        return;
+                    }
+
+                    const pick = await vscode.window.showQuickPick(
+                        renameableRules.map((r) => ({
+                            label: `$(file-text) ${r.name}`,
+                            description: `[${r.scope}] ${r.title}`,
+                            filePath: r.filePath,
+                        })),
+                        { placeHolder: "Select rule file to rename" }
+                    );
+
+                    if (!pick) return;
+                    targetRulePath = pick.filePath;
+                }
+
+                const currentFileName = path.basename(targetRulePath).replace(/\.disabled$/, "");
+                const newName = await vscode.window.showInputBox({
+                    prompt: "Enter new file name for the rule",
+                    value: currentFileName,
+                    validateInput: (val) => {
+                        if (!val.trim()) return "Rule file name cannot be empty.";
+                        if (/[^a-zA-Z0-9-_.]/.test(val.trim())) {
+                            return "Only letters, numbers, hyphens, underscores, and dots are allowed.";
+                        }
+                        return null;
+                    },
+                });
+
+                if (!newName || !newName.trim()) return;
+
+                try {
+                    const newPath = await rulesManager.renameRule(targetRulePath, newName.trim());
+                    vscode.window.showInformationMessage(`Rule renamed to "${path.basename(newPath).replace(/\.disabled$/, "")}"`);
+                    onStateChange();
+                } catch (err: any) {
+                    vscode.window.showErrorMessage(`Failed to rename rule: ${err.message}`);
+                }
             }
         )
     );

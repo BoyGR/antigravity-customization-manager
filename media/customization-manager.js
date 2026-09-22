@@ -29,6 +29,7 @@
             openInEditor: "Open",
             editRule: "Quick Edit",
             forkToWorkspace: "Fork to Workspace",
+            rename: "Rename",
             delete: "Delete",
             cancel: "Cancel",
             save: "Save",
@@ -123,6 +124,7 @@
             openInEditor: "Buka",
             editRule: "Edit Cepat",
             forkToWorkspace: "Salin ke Workspace",
+            rename: "Ubah Nama",
             delete: "Hapus",
             cancel: "Batal",
             save: "Simpan",
@@ -937,6 +939,11 @@
                 <div class="card-preview">${rule.contentPreview}</div>
                 <div class="card-actions">
                     <button class="action-btn btn-open" data-path="${rule.filePath}">${t("openInEditor")}</button>
+                    ${
+                        rule.scope !== "workspace-root"
+                            ? `<button class="action-btn btn-rename" data-path="${rule.filePath}">${t("rename")}</button>`
+                            : ""
+                    }
                     <button class="action-btn btn-delete danger" data-path="${rule.filePath}">${t("delete")}</button>
                 </div>
             `;
@@ -957,6 +964,17 @@
                     filePath: rule.filePath,
                 });
             });
+
+            // Rename
+            const renameBtn = card.querySelector(".btn-rename");
+            if (renameBtn) {
+                renameBtn.addEventListener("click", () => {
+                    vscode.postMessage({
+                        type: "renameRule",
+                        filePath: rule.filePath,
+                    });
+                });
+            }
 
             // Delete
             card.querySelector(".btn-delete").addEventListener("click", () => {

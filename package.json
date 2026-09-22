@@ -2,7 +2,7 @@
     "name": "antigravity-customization-manager",
     "displayName": "Antigravity Customization Manager",
     "description": "Master your Google Antigravity & AI Agent rules, skills, and token budgets across global and workspace scopes.",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "publisher": "boygr",
     "author": {
         "name": "Boy Gilang Ramadhan",
@@ -83,6 +83,12 @@
                 "title": "Create New Rule...",
                 "category": "Antigravity Customization Manager",
                 "icon": "$(plus)"
+            },
+            {
+                "command": "boygr.antigravityCustomizationManager.renameRule",
+                "title": "Rename Rule...",
+                "category": "Antigravity Customization Manager",
+                "icon": "$(edit)"
             },
             {
                 "command": "boygr.antigravityCustomizationManager.createSkill",

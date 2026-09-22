@@ -231,6 +231,38 @@ export class RulesManager {
         return newPath;
     }
 
+    public async renameRule(filePath: string, newFileName: string): Promise<string> {
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`Rule file not found: ${filePath}`);
+        }
+
+        const dir = path.dirname(filePath);
+        const isCurrentlyDisabled = filePath.endsWith(".disabled");
+
+        let cleanName = newFileName.trim();
+        if (cleanName.endsWith(".disabled")) {
+            cleanName = cleanName.replace(/\.disabled$/, "");
+        }
+
+        if (!cleanName.endsWith(".md")) {
+            cleanName += ".md";
+        }
+
+        const finalTargetName = isCurrentlyDisabled ? `${cleanName}.disabled` : cleanName;
+        const targetPath = path.join(dir, finalTargetName);
+
+        if (path.resolve(targetPath).toLowerCase() === path.resolve(filePath).toLowerCase()) {
+            if (path.basename(targetPath) === path.basename(filePath)) {
+                return filePath;
+            }
+        } else if (fs.existsSync(targetPath)) {
+            throw new Error(`A rule named "${cleanName}" already exists in this location.`);
+        }
+
+        fs.renameSync(filePath, targetPath);
+        return targetPath;
+    }
+
     public async createRule(
         scope: "global" | "workspace",
         fileName: string,

@@ -217,6 +217,33 @@ export class CustomizationWebviewProvider implements vscode.WebviewViewProvider 
                 break;
             }
 
+            case "renameRule": {
+                if (!message.filePath) break;
+                const currentFileName = path.basename(message.filePath).replace(/\.disabled$/, "");
+                const newName = await vscode.window.showInputBox({
+                    prompt: "Enter new file name for the rule",
+                    value: currentFileName,
+                    validateInput: (val) => {
+                        if (!val.trim()) return "Rule file name cannot be empty.";
+                        if (/[^a-zA-Z0-9-_.]/.test(val.trim())) {
+                            return "Only letters, numbers, hyphens, underscores, and dots are allowed.";
+                        }
+                        return null;
+                    },
+                });
+
+                if (newName && newName.trim()) {
+                    try {
+                        const newPath = await this.rulesManager.renameRule(message.filePath, newName.trim());
+                        vscode.window.showInformationMessage(`Rule renamed to "${path.basename(newPath).replace(/\.disabled$/, "")}"`);
+                        await this.refresh();
+                    } catch (err: any) {
+                        vscode.window.showErrorMessage(`Failed to rename rule: ${err.message}`);
+                    }
+                }
+                break;
+            }
+
             case "createSkill":
                 await this.skillsManager.createSkill({
                     name: message.name,
