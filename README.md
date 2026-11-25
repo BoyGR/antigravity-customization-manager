@@ -27,16 +27,18 @@ It provides visual token budget meters to prevent silent rule demotion, file siz
 - **Multi-Scope Rule Discovery**:
   - **Global Rules**: Discovered from `~/.gemini/config/rules/*.md` (system-wide machine rules).
   - **Workspace Root Rules**: Discovered from `GEMINI.md` and `AGENTS.md` at repository roots.
-  - **Workspace Modular Rules**: Discovered from `.agents/rules/*.md` (or `.agent/rules/`).
+  - **Workspace Modular Rules**: Discovered from `.agents/rules/*.md` (also supports `.agent/`, `_agents/`, and `_agent/`).
+  - **Multi-Agent Rules**: Automatically surfaces `CODEX.md`, `CLAUDE.md`, `.cursorrules`, and `.github/copilot-instructions.md` with dedicated agent badges.
 - **Precision Antigravity Budget Guardrails**:
   - **24 KB / 24,000 Byte Cap**: Visual warning before rule files get truncated on line boundaries.
   - **20,000 Token Aggregate Budget**: Live meter monitoring rule consumption to prevent rules from being demoted from inline text to path pointers.
-- **Rule Templates**: Scaffold governance policies with built-in templates (Developer SOP & Release Gates, Architecture Boundaries, Git Index Protection, Anti-AI Slop Guidelines).
-- **Toggle State**: Enable or disable rules temporarily without deleting files.
+- **Rule Templates**: Scaffold governance policies with generic industry-standard templates (*Coding Standards & Best Practices*, *Security & Secrets Protection*, *Documentation & API Guidelines*).
+- **Rename & Toggle State**: Safely rename modular rule files with collision checks, or enable/disable rules temporarily without deleting files.
 
 ### Skills Engine & Progressive Disclosure
 - **Multi-Tier Skill Discovery**:
   - **Workspace Skills**: `.agents/skills/<name>/SKILL.md` (highest precedence).
+  - **Global User Skills**: `~/.gemini/config/skills/<name>/SKILL.md`.
   - **Global Plugin Skills**: `~/.gemini/config/plugins/<plugin>/skills/`.
   - **Built-in Skills**: `~/.gemini/antigravity/builtin/skills/`.
 - **Precedence & Shadowing Detector**: Visual indicators when a workspace skill overrides or shadows a global/built-in skill.
@@ -68,8 +70,11 @@ All commands are accessible from the Command Palette (`Ctrl+Shift+P` / `Cmd+Shif
 | `Antigravity Customization Manager: Focus Customization Manager View` | Opens and focuses the sidebar dashboard |
 | `Antigravity Customization Manager: Refresh Rules & Skills` | Refresh rules, skills, and token budget calculations |
 | `Antigravity Customization Manager: Create New Rule...` | Launch rule creation dialog with built-in templates |
+| `Antigravity Customization Manager: Rename Rule...` | Safely rename a modular rule file with validation |
 | `Antigravity Customization Manager: Create New Skill...` | Launch skill scaffolding wizard |
 | `Antigravity Customization Manager: Sync / Export Rules to Multi-Agent...` | Export rules to AGENTS.md, CODEX.md, Cursor, Claude, or Copilot |
+| `Antigravity Customization Manager: Open Global Rules Folder` | Open `~/.gemini/config/rules` in OS File Manager |
+| `Antigravity Customization Manager: Open Workspace Rules Folder` | Open `.agents/rules` in OS File Manager |
 | `Antigravity Customization Manager: Open Settings` | Open webview customization settings modal |
 
 ---
@@ -92,6 +97,9 @@ Customize settings via your editor's `settings.json`:
   // Display active rules and skills summary indicator in the status bar
   "boygr.antigravityCustomizationManager.showStatusBarItem": true,
 
+  // UI theme preference: "vscode", "dark", "light", or "system"
+  "boygr.antigravityCustomizationManager.theme": "vscode",
+
   // UI display language: "auto", "en", or "id"
   "boygr.antigravityCustomizationManager.defaultLanguage": "auto",
 
@@ -106,19 +114,19 @@ Customize settings via your editor's `settings.json`:
 
 ### From VSIX Package
 
-1. Download the latest `antigravity-customization-manager-0.1.0.vsix` from [GitHub Releases](https://github.com/BoyGR/antigravity-customization-manager/releases).
+1. Download the latest `antigravity-customization-manager-0.1.4.vsix` from [GitHub Releases](https://github.com/BoyGR/antigravity-customization-manager/releases).
 2. Install via editor:
    - **GUI**: In the Extensions view (`Ctrl+Shift+X`), click `...` at the top right and choose **Install from VSIX...**.
    - **CLI**:
      ```powershell
      # Visual Studio Code
-     code --install-extension antigravity-customization-manager-0.1.0.vsix
+     code --install-extension antigravity-customization-manager-0.1.4.vsix
 
      # Google Antigravity IDE
-     antigravity --install-extension antigravity-customization-manager-0.1.0.vsix
+     antigravity --install-extension antigravity-customization-manager-0.1.4.vsix
 
      # Cursor
-     cursor --install-extension antigravity-customization-manager-0.1.0.vsix
+     cursor --install-extension antigravity-customization-manager-0.1.4.vsix
      ```
 
 ---

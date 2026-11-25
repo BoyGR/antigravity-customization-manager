@@ -37,6 +37,7 @@ export function computeBudgetSummary(
     }
 
     let workspaceSkillsCount = 0;
+    let globalSkillsCount = 0;
     let pluginSkillsCount = 0;
     let builtinSkillsCount = 0;
     let totalSkillsDescriptionTokens = 0;
@@ -44,6 +45,8 @@ export function computeBudgetSummary(
     for (const skill of skills) {
         if (skill.tier === "workspace") {
             workspaceSkillsCount++;
+        } else if (skill.tier === "global") {
+            globalSkillsCount++;
         } else if (skill.tier === "plugin") {
             pluginSkillsCount++;
         } else if (skill.tier === "builtin") {
@@ -65,6 +68,7 @@ export function computeBudgetSummary(
         rulesOverFileLimit,
         totalSkills: skills.length,
         workspaceSkillsCount,
+        globalSkillsCount,
         pluginSkillsCount,
         builtinSkillsCount,
         totalSkillsDescriptionTokens,

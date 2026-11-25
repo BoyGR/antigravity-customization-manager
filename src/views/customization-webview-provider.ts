@@ -437,7 +437,8 @@ export class CustomizationWebviewProvider implements vscode.WebviewViewProvider 
                     <select id="skills-scope-filter" class="dropdown-filter" aria-label="Skills Tier Filter">
                         <option value="all" data-i18n="filterAll">All Tiers</option>
                         <option value="workspace" data-i18n="filterWorkspace">Workspace</option>
-                        <option value="global" data-i18n="filterGlobal">Plugins</option>
+                        <option value="global" data-i18n="filterGlobal">Global Machine</option>
+                        <option value="plugin" data-i18n="filterPlugins">Plugins</option>
                         <option value="builtin" data-i18n="filterBuiltin">Built-in</option>
                     </select>
                 </div>
@@ -513,7 +514,7 @@ export class CustomizationWebviewProvider implements vscode.WebviewViewProvider 
                         <ol class="precedence-list">
                             <li><strong>Workspace Project:</strong> <code>.agents/rules</code>, <code>.agents/skills</code>, <code>AGENTS.md</code></li>
                             <li><strong>Declared Configs:</strong> <code>skills.json</code>, <code>plugins.json</code></li>
-                            <li><strong>Global Machine:</strong> <code>~/.gemini/config/rules</code></li>
+                            <li><strong>Global Machine:</strong> <code>~/.gemini/config/rules</code>, <code>~/.gemini/config/skills</code></li>
                             <li><strong>Built-in Customizations:</strong> <code>~/.gemini/antigravity/builtin/skills</code></li>
                         </ol>
                     </div>

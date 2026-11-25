@@ -5,6 +5,21 @@ All notable changes to the **Antigravity Customization Manager** extension will 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-11-26
+
+### Fixed
+- **Skills Folder Opener & Filter Alignment**: Fixed a mismatch where selecting the Plugins filter in the Skills tab failed to open `~/.gemini/config/plugins`, and corrected the filter label localization key (`filterPlugins`).
+- **Multi-Agent Sync Setting Enforcement**: The **Multi-Agent Sync** toolbar button now respects the `enableMultiAgentSync` preference and hides automatically when disabled.
+- **Webview HTML Escaping**: Escaped dynamic rule and skill titles, file names, paths, and content previews when rendering cards and sync options to prevent layout breakage from angle brackets or quotes in Markdown.
+- **Multi-Agent Rule Badges & Discovery**: Added `CODEX.md` discovery alongside `CLAUDE.md`, `.cursorrules`, and `.github/copilot-instructions.md`, expanded workspace file watchers to monitor `CODEX.md` and `.cursorrules`, and displayed dedicated agent badges on multi-agent rule cards.
+
+### Added
+- **Global User Skills Discovery**: Added discovery, filtering, shadowing detection, and folder-opener support for standalone global skills located in `~/.gemini/config/skills/`.
+- **Extended Workspace Directory Support**: Added automatic discovery fallback for `_agents/` and `_agent/` directories in addition to `.agents/` and `.agent/`.
+
+### Documentation
+- Updated `README.md` to reflect generic rule templates, global skills discovery, all available commands (`Rename Rule...`, folder openers), `theme` configuration, and updated installation examples.
+
 ## [0.1.3] - 2026-09-22
 
 ### Changed

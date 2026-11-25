@@ -33,7 +33,22 @@ export class SkillsManager {
             }
         }
 
-        // 2. Global Plugin Skills
+        // 2. Global User Skills (~/.gemini/config/skills/)
+        if (fs.existsSync(this.paths.globalSkillsDir)) {
+            const globalSkills = this.scanSkillsDirectory(this.paths.globalSkillsDir, "global");
+            for (const skill of globalSkills) {
+                const lowerName = skill.name.toLowerCase();
+                if (seenNames.has(lowerName)) {
+                    skill.isShadowed = true;
+                    skill.shadowedByTier = seenNames.get(lowerName);
+                } else {
+                    seenNames.set(lowerName, "global");
+                }
+                skills.push(skill);
+            }
+        }
+
+        // 3. Global Plugin Skills
         if (fs.existsSync(this.paths.globalPluginsDir)) {
             const pluginSkills = this.scanPluginSkillsDirectory(this.paths.globalPluginsDir);
             for (const skill of pluginSkills) {
@@ -48,7 +63,7 @@ export class SkillsManager {
             }
         }
 
-        // 3. Built-in System Skills
+        // 4. Built-in System Skills
         if (fs.existsSync(this.paths.builtinSkillsDir)) {
             const builtinSkills = this.scanSkillsDirectory(this.paths.builtinSkillsDir, "builtin");
             for (const skill of builtinSkills) {

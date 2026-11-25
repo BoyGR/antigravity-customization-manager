@@ -17,6 +17,7 @@ export function resolveSystemPaths(customAntigravityPath?: string): SystemPaths 
     }
 
     const globalRulesDir = path.join(geminiGlobalDir, "config", "rules");
+    const globalSkillsDir = path.join(geminiGlobalDir, "config", "skills");
     const globalPluginsDir = path.join(geminiGlobalDir, "config", "plugins");
     const builtinSkillsDir = path.join(geminiGlobalDir, "antigravity", "builtin", "skills");
 
@@ -30,18 +31,12 @@ export function resolveSystemPaths(customAntigravityPath?: string): SystemPaths 
     if (workspaceFolders && workspaceFolders.length > 0) {
         workspaceRoot = workspaceFolders[0].uri.fsPath;
 
-        // Check .agents, or fallback to .agent
-        const candidateAgentsDir = path.join(workspaceRoot, ".agents");
-        const candidateAltAgentDir = path.join(workspaceRoot, ".agent");
-
-        if (fs.existsSync(candidateAgentsDir)) {
-            workspaceAgentsDir = candidateAgentsDir;
-        } else if (fs.existsSync(candidateAltAgentDir)) {
-            workspaceAgentsDir = candidateAltAgentDir;
-        } else {
-            // Default to .agents if neither exists yet
-            workspaceAgentsDir = candidateAgentsDir;
-        }
+        // Check .agents, .agent, _agents, _agent (Antigravity discovery order)
+        const candidateDirs = [".agents", ".agent", "_agents", "_agent"].map((name) =>
+            path.join(workspaceRoot!, name)
+        );
+        const existingDir = candidateDirs.find((dir) => fs.existsSync(dir));
+        workspaceAgentsDir = existingDir ?? candidateDirs[0];
 
         workspaceRulesDir = path.join(workspaceAgentsDir, "rules");
         workspaceSkillsDir = path.join(workspaceAgentsDir, "skills");
@@ -51,6 +46,7 @@ export function resolveSystemPaths(customAntigravityPath?: string): SystemPaths 
         homeDir,
         geminiGlobalDir,
         globalRulesDir,
+        globalSkillsDir,
         globalPluginsDir,
         builtinSkillsDir,
         workspaceRoot,

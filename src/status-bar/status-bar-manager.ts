@@ -31,7 +31,7 @@ export class StatusBarManager implements vscode.Disposable {
 
         let tooltip = `Antigravity Customization Manager\n\n`;
         tooltip += `Active Rules: ${budget.activeRulesCount} (${tokenDisplay} / ${(budget.maxRulesBudget / 1000).toFixed(0)}k tokens)\n`;
-        tooltip += `Total Skills: ${budget.totalSkills} (${budget.workspaceSkillsCount} workspace, ${budget.pluginSkillsCount} plugins, ${budget.builtinSkillsCount} builtin)\n`;
+        tooltip += `Total Skills: ${budget.totalSkills} (${budget.workspaceSkillsCount} workspace, ${budget.globalSkillsCount} global, ${budget.pluginSkillsCount} plugins, ${budget.builtinSkillsCount} builtin)\n`;
 
         if (budget.rulesOverFileLimit > 0) {
             tooltip += `\n⚠️ ${budget.rulesOverFileLimit} rule(s) exceed 24 KB per-file limit!`;

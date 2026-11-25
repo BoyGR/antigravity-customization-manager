@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { estimateTokens } from "./budget-calculator";
-import { RuleItem, RuleScope, SystemPaths } from "./types";
+import { MultiAgentTarget, RuleItem, RuleScope, SystemPaths } from "./types";
 
 export interface RuleTemplate {
     id: string;
@@ -119,8 +119,9 @@ export class RulesManager {
                 }
             }
 
-            // 4. Multi-agent rules in workspace (CLAUDE.md, .cursorrules, .github/copilot-instructions.md)
+            // 4. Multi-agent rules in workspace (CODEX.md, CLAUDE.md, .cursorrules, .github/copilot-instructions.md)
             const multiAgentCandidates = [
+                { file: "CODEX.md", agent: "OpenAI Codex" },
                 { file: "CLAUDE.md", agent: "Claude Code" },
                 { file: ".cursorrules", agent: "Cursor" },
                 { file: path.join(".github", "copilot-instructions.md"), agent: "GitHub Copilot" },
@@ -298,7 +299,7 @@ export class RulesManager {
 
     public async exportMultiAgentRule(
         sourceRulePath: string,
-        targetAgent: "agents-md" | "codex-md" | "cursorrules" | "claude-md" | "copilot-instructions"
+        targetAgent: MultiAgentTarget
     ): Promise<string> {
         if (!this.paths.workspaceRoot) {
             throw new Error("Cannot sync to workspace without an active open project.");

@@ -11,6 +11,7 @@
             filterAll: "All Scopes",
             filterWorkspace: "Workspace",
             filterGlobal: "Global Machine",
+            filterPlugins: "Plugins",
             filterBuiltin: "Built-in",
             btnNewRule: "New Rule",
             btnNewSkill: "New Skill",
@@ -106,6 +107,7 @@
             filterAll: "Semua Scope",
             filterWorkspace: "Workspace",
             filterGlobal: "Global Mesin",
+            filterPlugins: "Plugin",
             filterBuiltin: "Bawaan Sistem",
             btnNewRule: "Rule Baru",
             btnNewSkill: "Skill Baru",
@@ -321,6 +323,10 @@
         const footerVersion = document.querySelector(".footer-version");
         if (footerVersion && state.meta?.version) {
             footerVersion.textContent = `v${state.meta.version}`;
+        }
+        if (btnSyncAgents) {
+            btnSyncAgents.style.display =
+                state.preferences?.enableMultiAgentSync === false ? "none" : "";
         }
     }
 
@@ -666,8 +672,12 @@
                 targetPath = state.paths.builtinSkillsDir;
             } else if (state.skillsScope === "plugin" && state.paths && state.paths.globalPluginsDir) {
                 targetPath = state.paths.globalPluginsDir;
+            } else if (state.skillsScope === "global" && state.paths && state.paths.globalSkillsDir) {
+                targetPath = state.paths.globalSkillsDir;
             } else if (state.paths && state.paths.workspaceSkillsDir) {
                 targetPath = state.paths.workspaceSkillsDir;
+            } else if (state.paths && state.paths.globalSkillsDir) {
+                targetPath = state.paths.globalSkillsDir;
             } else if (state.paths && state.paths.builtinSkillsDir) {
                 targetPath = state.paths.builtinSkillsDir;
             }
@@ -818,7 +828,7 @@
         btnSyncAgents.addEventListener("click", () => {
             let ruleOptions = "";
             state.rules.forEach((r) => {
-                ruleOptions += `<option value="${r.filePath}">[${r.scope}] ${r.name} - ${r.title}</option>`;
+                ruleOptions += `<option value="${escapeHtml(r.filePath)}">[${escapeHtml(r.scope)}] ${escapeHtml(r.name)} - ${escapeHtml(r.title)}</option>`;
             });
 
             if (!ruleOptions) {
@@ -877,7 +887,10 @@
 
         if (state.rulesScope === "workspace") {
             filtered = filtered.filter(
-                (r) => r.scope === "workspace-root" || r.scope === "workspace-modular"
+                (r) =>
+                    r.scope === "workspace-root" ||
+                    r.scope === "workspace-modular" ||
+                    r.scope === "multi-agent"
             );
         } else if (state.rulesScope === "global") {
             filtered = filtered.filter((r) => r.scope === "global");
@@ -904,26 +917,32 @@
                 rule.isOverLimit ? "overlimit" : ""
             }`;
 
-            const badgeScopeClass =
-                rule.scope === "global" ? "badge-global" : "badge-workspace";
-            const badgeScopeLabel =
-                rule.scope === "global" ? t("scopeGlobal") : t("scopeWorkspace");
+            let badgeScopeClass = "badge-workspace";
+            let badgeScopeLabel = t("scopeWorkspace");
+            if (rule.scope === "global") {
+                badgeScopeClass = "badge-global";
+                badgeScopeLabel = t("scopeGlobal");
+            } else if (rule.scope === "multi-agent" && rule.targetAgent) {
+                badgeScopeClass = "badge-builtin";
+                badgeScopeLabel = rule.targetAgent;
+            }
 
             const sizeKb = (rule.sizeBytes / 1024).toFixed(1);
+            const safePath = escapeHtml(rule.filePath);
 
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-title-group">
                         <label class="switch" title="Toggle Enable/Disable">
-                            <input type="checkbox" class="rule-toggle" data-path="${rule.filePath}" ${
+                            <input type="checkbox" class="rule-toggle" data-path="${safePath}" ${
                                 rule.isEnabled ? "checked" : ""
                             }>
                             <span class="slider"></span>
                         </label>
-                        <span class="card-title" title="${rule.filePath}">${rule.title}</span>
+                        <span class="card-title" title="${safePath}">${escapeHtml(rule.title)}</span>
                     </div>
                     <div class="card-badges">
-                        <span class="badge ${badgeScopeClass}">${badgeScopeLabel}</span>
+                        <span class="badge ${badgeScopeClass}">${escapeHtml(badgeScopeLabel)}</span>
                         ${
                             rule.isOverLimit
                                 ? `<span class="badge badge-warning" title="Exceeds 24 KB per-file limit!">>24 KB</span>`
@@ -932,19 +951,19 @@
                     </div>
                 </div>
                 <div class="card-meta">
-                    <span class="card-meta-item">📄 ${rule.name}</span>
+                    <span class="card-meta-item">📄 ${escapeHtml(rule.name)}</span>
                     <span class="card-meta-item">⚖️ ${sizeKb} KB</span>
                     <span class="card-meta-item">🔤 ~${rule.estimatedTokens} tok</span>
                 </div>
-                <div class="card-preview">${rule.contentPreview}</div>
+                <div class="card-preview">${escapeHtml(rule.contentPreview)}</div>
                 <div class="card-actions">
-                    <button class="action-btn btn-open" data-path="${rule.filePath}">${t("openInEditor")}</button>
+                    <button class="action-btn btn-open" data-path="${safePath}">${escapeHtml(t("openInEditor"))}</button>
                     ${
-                        rule.scope !== "workspace-root"
-                            ? `<button class="action-btn btn-rename" data-path="${rule.filePath}">${t("rename")}</button>`
+                        rule.scope !== "workspace-root" && rule.scope !== "multi-agent"
+                            ? `<button class="action-btn btn-rename" data-path="${safePath}">${escapeHtml(t("rename"))}</button>`
                             : ""
                     }
-                    <button class="action-btn btn-delete danger" data-path="${rule.filePath}">${t("delete")}</button>
+                    <button class="action-btn btn-delete danger" data-path="${safePath}">${escapeHtml(t("delete"))}</button>
                 </div>
             `;
 
@@ -997,6 +1016,8 @@
         if (state.skillsScope === "workspace") {
             filtered = filtered.filter((s) => s.tier === "workspace");
         } else if (state.skillsScope === "global") {
+            filtered = filtered.filter((s) => s.tier === "global");
+        } else if (state.skillsScope === "plugin") {
             filtered = filtered.filter((s) => s.tier === "plugin");
         } else if (state.skillsScope === "builtin") {
             filtered = filtered.filter((s) => s.tier === "builtin");
@@ -1020,21 +1041,25 @@
             const card = document.createElement("div");
             card.className = `item-card ${skill.isShadowed ? "disabled" : ""}`;
 
-            let tierBadge = `<span class="badge badge-workspace">${t("scopeWorkspace")}</span>`;
-            if (skill.tier === "plugin") {
-                tierBadge = `<span class="badge badge-global">Plugin</span>`;
+            let tierBadge = `<span class="badge badge-workspace">${escapeHtml(t("scopeWorkspace"))}</span>`;
+            if (skill.tier === "global") {
+                tierBadge = `<span class="badge badge-global">${escapeHtml(t("scopeGlobal"))}</span>`;
+            } else if (skill.tier === "plugin") {
+                tierBadge = `<span class="badge badge-global">${escapeHtml(t("filterPlugins"))}</span>`;
             } else if (skill.tier === "builtin") {
-                tierBadge = `<span class="badge badge-builtin">${t("scopeBuiltin")}</span>`;
+                tierBadge = `<span class="badge badge-builtin">${escapeHtml(t("scopeBuiltin"))}</span>`;
             }
 
             const shadowedBadge = skill.isShadowed
-                ? `<span class="badge badge-shadowed" title="Shadowed by ${skill.shadowedByTier} tier">${t("shadowed")}</span>`
+                ? `<span class="badge badge-shadowed" title="Shadowed by ${escapeHtml(skill.shadowedByTier)} tier">${escapeHtml(t("shadowed"))}</span>`
                 : "";
+            const safeSkillPath = escapeHtml(skill.skillFilePath);
+            const safeFolderPath = escapeHtml(skill.folderPath);
 
             card.innerHTML = `
                 <div class="card-header">
                     <div class="card-title-group">
-                        <span class="card-title">${skill.name}</span>
+                        <span class="card-title" title="${safeSkillPath}">${escapeHtml(skill.name)}</span>
                     </div>
                     <div class="card-badges">
                         ${shadowedBadge}
@@ -1042,18 +1067,18 @@
                     </div>
                 </div>
                 <div class="card-meta">
-                    <span class="card-meta-item">📁 ${skill.tier}</span>
+                    <span class="card-meta-item">📁 ${escapeHtml(skill.tier)}</span>
                     <span class="card-meta-item">🔤 ~${skill.descriptionTokens} desc tok</span>
                     <span class="card-meta-item">${skill.hasScripts ? "⚡ scripts" : ""}</span>
                     <span class="card-meta-item">${skill.hasReferences ? "📖 refs" : ""}</span>
                 </div>
-                <div class="card-preview">${skill.description}</div>
+                <div class="card-preview">${escapeHtml(skill.description)}</div>
                 <div class="card-actions">
-                    <button class="action-btn btn-open" data-path="${skill.skillFilePath}">${t("openInEditor")}</button>
+                    <button class="action-btn btn-open" data-path="${safeSkillPath}">${escapeHtml(t("openInEditor"))}</button>
                     ${
                         skill.tier !== "workspace"
-                            ? `<button class="action-btn btn-fork" data-path="${skill.folderPath}">${t("forkToWorkspace")}</button>`
-                            : `<button class="action-btn btn-delete-skill danger" data-path="${skill.folderPath}">${t("delete")}</button>`
+                            ? `<button class="action-btn btn-fork" data-path="${safeFolderPath}">${escapeHtml(t("forkToWorkspace"))}</button>`
+                            : `<button class="action-btn btn-delete-skill danger" data-path="${safeFolderPath}">${escapeHtml(t("delete"))}</button>`
                     }
                 </div>
             `;

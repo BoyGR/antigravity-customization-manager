@@ -19,7 +19,7 @@ export interface RuleItem {
     targetAgent?: string;
 }
 
-export type SkillTier = "workspace" | "plugin" | "builtin";
+export type SkillTier = "workspace" | "global" | "plugin" | "builtin";
 
 export interface SkillItem {
     id: string;
@@ -48,6 +48,7 @@ export interface BudgetSummary {
     rulesOverFileLimit: number;
     totalSkills: number;
     workspaceSkillsCount: number;
+    globalSkillsCount: number;
     pluginSkillsCount: number;
     builtinSkillsCount: number;
     totalSkillsDescriptionTokens: number;
@@ -57,6 +58,7 @@ export interface SystemPaths {
     homeDir: string;
     geminiGlobalDir: string;
     globalRulesDir: string;
+    globalSkillsDir: string;
     globalPluginsDir: string;
     builtinSkillsDir: string;
     workspaceRoot: string | null;
@@ -89,6 +91,7 @@ export interface CustomizationState {
 
 export type MultiAgentTarget =
     | "agents-md"
+    | "codex-md"
     | "claude-md"
     | "cursorrules"
     | "copilot-instructions";

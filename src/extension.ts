@@ -88,17 +88,23 @@ export function activate(context: vscode.ExtensionContext): void {
 
     // File system watcher for live updates when rules or skills are modified
     try {
-        const watcher = vscode.workspace.createFileSystemWatcher("**/.agents/**");
+        const watcher = vscode.workspace.createFileSystemWatcher("**/{.agents,.agent,_agents,_agent}/**");
         watcher.onDidChange(refreshAll);
         watcher.onDidCreate(refreshAll);
         watcher.onDidDelete(refreshAll);
         context.subscriptions.push(watcher);
 
-        const rootRulesWatcher = vscode.workspace.createFileSystemWatcher("**/{AGENTS,GEMINI,CLAUDE}.md*");
+        const rootRulesWatcher = vscode.workspace.createFileSystemWatcher("**/{AGENTS,GEMINI,CLAUDE,CODEX}.md*");
         rootRulesWatcher.onDidChange(refreshAll);
         rootRulesWatcher.onDidCreate(refreshAll);
         rootRulesWatcher.onDidDelete(refreshAll);
         context.subscriptions.push(rootRulesWatcher);
+
+        const cursorRulesWatcher = vscode.workspace.createFileSystemWatcher("**/.cursorrules");
+        cursorRulesWatcher.onDidChange(refreshAll);
+        cursorRulesWatcher.onDidCreate(refreshAll);
+        cursorRulesWatcher.onDidDelete(refreshAll);
+        context.subscriptions.push(cursorRulesWatcher);
 
         if (fs.existsSync(systemPaths.globalRulesDir)) {
             const globalWatcher = fs.watch(systemPaths.globalRulesDir, (_eventType, filename) => {
